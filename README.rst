@@ -6,10 +6,10 @@ a Django app for receiving payment notifications from Coinbase
 
 
 .. image:: https://img.shields.io/travis/eldarion/django-coinbase.svg
-    :target: https://travis-ci.org/eldarion/django-coinbase
+    :target: https://travis-ci.org/koalalorenzo/django-coinbase
 
 .. image:: https://img.shields.io/coveralls/eldarion/django-coinbase.svg
-    :target: https://coveralls.io/r/eldarion/django-coinbase
+    :target: https://coveralls.io/r/koalalorenzo/django-coinbase
 
 .. image:: https://img.shields.io/pypi/dm/django-coinbase.svg
     :target:  https://pypi.python.org/pypi/django-coinbase/
@@ -20,6 +20,8 @@ a Django app for receiving payment notifications from Coinbase
 .. image:: https://img.shields.io/badge/license-BSD-blue.svg
     :target:  https://pypi.python.org/pypi/django-coinbase/
 
+.. image:: https://tip4commit.com/projects/899.svg
+    :target:  https://tip4commit.com/github/koalalorenzo/django-coinbase
 
 Getting Started
 ---------------
