@@ -34,6 +34,10 @@ class Order(models.Model):
     def process(cls, data):
         data = call_api("https://coinbase.com/api/v1/orders/" + data["order"]["id"])
 
+        if data['success'] == False:
+            # Log the error
+            return
+
         verified = data["order"]
         defaults = dict(
             completed_at=verified["created_at"],
