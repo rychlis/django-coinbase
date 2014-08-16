@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import os
 import hashlib
 import hmac
 import requests
-from urlparse import urljoin
 import time
 import json
 
@@ -17,7 +15,10 @@ def call_api(url, body=None, api_key=None, secret_key=None):
     if not secret_key:
         secret_key = settings.COINBASE_API_KEY_SECRET
 
-    opener = urllib2.build_opener()
+    if body:
+        if type(body) != str:
+            body = json.dumps(body)
+
     nonce = int(time.time() * 1e6)
     message = str(nonce) + url + ('' if body is None else body)
     signature = hmac.new(secret_key, message, hashlib.sha256).hexdigest()
@@ -33,7 +34,7 @@ def call_api(url, body=None, api_key=None, secret_key=None):
 
     # If we are passing data, a POST request is made. Note that content_type is specified as json.
     if body:
-        req = requests.post(url, headers=headers, params=body)
+        req = requests.post(url, headers=headers, data=body)
     # If body is nil, a GET request is made.
     else:
         req = requests.get(url, headers=headers)
