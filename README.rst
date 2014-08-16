@@ -24,6 +24,7 @@ This is a fairly simple app. It's three parts:
 1. Webhook View
 2. Model to store the webhook received data
 3. Signal emitted on reciept/validation/storage of webhook data
+4. Template tag to generate a HTML payment button
 
 First off, you'll want to add `django-coinbase` to your requirements.txt and
 pip install it in your virtualenv. Next you'll want to add `coinbase` to your
