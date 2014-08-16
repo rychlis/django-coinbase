@@ -4,13 +4,6 @@ django-coinbase
 
 a Django app for receiving payment notifications from Coinbase
 
-
-.. image:: https://img.shields.io/travis/eldarion/django-coinbase.svg
-    :target: https://travis-ci.org/koalalorenzo/django-coinbase
-
-.. image:: https://img.shields.io/coveralls/eldarion/django-coinbase.svg
-    :target: https://coveralls.io/r/koalalorenzo/django-coinbase
-
 .. image:: https://img.shields.io/pypi/dm/django-coinbase.svg
     :target:  https://pypi.python.org/pypi/django-coinbase/
 
@@ -66,13 +59,13 @@ For example::
 
     # urls.py
     url(r"^payments/", include("coinbase.urls"))
-    
+
     # settings.py
     COINBASE_SHARED_SECRET = "mysecretsauce"
-    
+
     >>> Site.objects.get_current().domain
     example.com
-    
+
     # Your url would be
     http://example.com/payments/cb/?secret=mysecretsauce
 
