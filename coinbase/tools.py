@@ -9,15 +9,21 @@ import json
 
 from django.conf import settings
 
-def call_api(url, body=None):
+def call_api(url, body=None, api_key=None, secret_key=None):
+
+    if not api_key:
+        api_key = settings.COINBASE_API_KEY
+    if not secret_key:
+        secret_key = settings.COINBASE_API_KEY_SECRET
+
     opener = urllib2.build_opener()
     nonce = int(time.time() * 1e6)
     message = str(nonce) + url + ('' if body is None else body)
-    signature = hmac.new(settings.COINBASE_API_KEY_SECRET, message, hashlib.sha256).hexdigest()
+    signature = hmac.new(secret_key, message, hashlib.sha256).hexdigest()
 
 
     headers = {
-        'ACCESS_KEY' : settings.COINBASE_API_KEY,
+        'ACCESS_KEY' : api_key,
         'ACCESS_SIGNATURE': signature,
         'ACCESS_NONCE': nonce,
         'Accept': 'application/json'
