@@ -1,11 +1,4 @@
 import decimal
-import os
-import hashlib
-import hmac
-import urllib2
-import time
-import json
-
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -14,6 +7,7 @@ import requests
 
 from jsonfield.fields import JSONField
 
+from .tools import call_api
 from .signals import order_received
 
 
@@ -38,27 +32,9 @@ class Order(models.Model):
 
     @classmethod
     def process(cls, data):
-        # From the documentation https://coinbase.com/docs/api/authentication#hmac
-        body = None
-        nonce = int(time.time() * 1e6)
-        message = str(nonce) + url + ('' if body is None else body)
-        signature = hmac.new(settings.COINBASE_API_KEY_SECRET, message, hashlib.sha256).hexdigest()
-        headers = {
-            'ACCESS_KEY' : settings.COINBASE_API_KEY,
-            'ACCESS_SIGNATURE': signature,
-            'ACCESS_NONCE': nonce,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
+        data = call_api("https://coinbase.com/api/v1/orders/" + data["order"]["id"])
 
-        response = requests.get(
-            "https://coinbase.com/api/v1/orders/{0}".format(
-                data["order"]["id"]
-            ),
-            headers=headers
-        )
-
-        verified = response.json()["order"]
+        verified = data["order"]
         defaults = dict(
             completed_at=verified["created_at"],
             status=verified["status"],
