@@ -3,7 +3,8 @@
 import os
 import hashlib
 import hmac
-import urllib2
+import requests
+from urlparse import urljoin
 import time
 import json
 
@@ -26,16 +27,15 @@ def call_api(url, body=None, api_key=None, secret_key=None):
         'ACCESS_KEY' : api_key,
         'ACCESS_SIGNATURE': signature,
         'ACCESS_NONCE': nonce,
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
     }
 
     # If we are passing data, a POST request is made. Note that content_type is specified as json.
     if body:
-        headers.update({'Content-Type': 'application/json'})
-        req = urllib2.Request(url, data=body, headers=headers)
-
+        req = requests.post(url, headers=headers, params=body)
     # If body is nil, a GET request is made.
     else:
-        req = urllib2.Request(url, headers=headers)
+        req = requests.get(url, headers=headers)
 
-    return opener.open(req)
+    return req.json()
