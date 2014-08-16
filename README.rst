@@ -39,35 +39,26 @@ something with the callback data::
 
 You will want to set two different settings:
 
-COINBASE_API_KEY
-^^^^^^^^^^^^^^^^
+    COINBASE_API_KEY = ""
+    COINBASE_API_KEY_SECRET = ""
+    COINBASE_SHARED_SECRET = ""
 
-This is the API Key found at: https://coinbase.com/account/integrations
+You can generete these values in API settings page on coinbase.com ( https://coinbase.com/settings/api ).
+COINBASE_SHARED_SECRET is a custom key that you must define in order to prevent people to perform the API to your django installation with fake payment. For example:
 
 
-COINBASE_SHARED_SECRET
-^^^^^^^^^^^^^^^^^^^^^^
+    # file: settings.py
+    COINBASE_SHARED_SECRET = "my_secret_sauce"
 
-This is just a random key you make up and store in your settings and add to the
-querystring of the Instant Payment Notifications field (https://coinbase.com/merchant_settings).
 
-This is the URL of your site + wherever you rooted the urls include + `/cb/`
-followed with the querystring parameter `secret` followed by the value of this
-settings.
 
-For example::
-
-    # urls.py
+    # file: urls.py
     url(r"^payments/", include("coinbase.urls"))
 
-    # settings.py
-    COINBASE_SHARED_SECRET = "mysecretsauce"
 
-    >>> Site.objects.get_current().domain
-    example.com
+Then the callback on CoinBase system is:
 
-    # Your url would be
-    http://example.com/payments/cb/?secret=mysecretsauce
+    http://example.com/payments/cb/?secret=my_secret_sauce
 
 
 
