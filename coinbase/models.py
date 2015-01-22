@@ -1,5 +1,4 @@
 import decimal
-
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -8,6 +7,7 @@ import requests
 
 from jsonfield.fields import JSONField
 
+from .tools import call_api
 from .signals import order_received
 
 
@@ -32,13 +32,13 @@ class Order(models.Model):
 
     @classmethod
     def process(cls, data):
-        response = requests.get(
-            "https://coinbase.com/api/v1/orders/{0}".format(
-                data["order"]["id"]
-            ),
-            params={"api_key": settings.COINBASE_API_KEY}
-        )
-        verified = response.json()["order"]
+        data = call_api("https://coinbase.com/api/v1/orders/" + data["order"]["id"])
+
+        if data['success'] == False:
+            # Log the error
+            return
+
+        verified = data["order"]
         defaults = dict(
             completed_at=verified["created_at"],
             status=verified["status"],

@@ -4,13 +4,6 @@ django-coinbase
 
 a Django app for receiving payment notifications from Coinbase
 
-
-.. image:: https://img.shields.io/travis/eldarion/django-coinbase.svg
-    :target: https://travis-ci.org/eldarion/django-coinbase
-
-.. image:: https://img.shields.io/coveralls/eldarion/django-coinbase.svg
-    :target: https://coveralls.io/r/eldarion/django-coinbase
-
 .. image:: https://img.shields.io/pypi/dm/django-coinbase.svg
     :target:  https://pypi.python.org/pypi/django-coinbase/
 
@@ -20,6 +13,8 @@ a Django app for receiving payment notifications from Coinbase
 .. image:: https://img.shields.io/badge/license-BSD-blue.svg
     :target:  https://pypi.python.org/pypi/django-coinbase/
 
+.. image:: https://tip4commit.com/projects/899.svg
+    :target:  https://tip4commit.com/github/koalalorenzo/django-coinbase
 
 Getting Started
 ---------------
@@ -29,6 +24,7 @@ This is a fairly simple app. It's three parts:
 1. Webhook View
 2. Model to store the webhook received data
 3. Signal emitted on reciept/validation/storage of webhook data
+4. Template tag to generate a HTML payment button
 
 First off, you'll want to add `django-coinbase` to your requirements.txt and
 pip install it in your virtualenv. Next you'll want to add `coinbase` to your
@@ -44,35 +40,26 @@ something with the callback data::
 
 You will want to set two different settings:
 
-COINBASE_API_KEY
-^^^^^^^^^^^^^^^^
+    COINBASE_API_KEY = ""
+    COINBASE_API_KEY_SECRET = ""
+    COINBASE_SHARED_SECRET = ""
 
-This is the API Key found at: https://coinbase.com/account/integrations
+You can generete these values in API settings page on coinbase.com ( https://coinbase.com/settings/api ).
+COINBASE_SHARED_SECRET is a custom key that you must define in order to prevent people to perform the API to your django installation with fake payment. For example:
 
 
-COINBASE_SHARED_SECRET
-^^^^^^^^^^^^^^^^^^^^^^
+    # file: settings.py
+    COINBASE_SHARED_SECRET = "my_secret_sauce"
 
-This is just a random key you make up and store in your settings and add to the
-querystring of the Instant Payment Notifications field (https://coinbase.com/merchant_settings).
 
-This is the URL of your site + wherever you rooted the urls include + `/cb/`
-followed with the querystring parameter `secret` followed by the value of this
-settings.
 
-For example::
-
-    # urls.py
+    # file: urls.py
     url(r"^payments/", include("coinbase.urls"))
-    
-    # settings.py
-    COINBASE_SHARED_SECRET = "mysecretsauce"
-    
-    >>> Site.objects.get_current().domain
-    example.com
-    
-    # Your url would be
-    http://example.com/payments/cb/?secret=mysecretsauce
+
+
+Then the callback on CoinBase system is:
+
+    http://example.com/payments/cb/?secret=my_secret_sauce
 
 
 
